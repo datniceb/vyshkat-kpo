@@ -17,7 +17,7 @@ import ru.hse.vyshkat.domain.Vehicle;
 class ParkTest {
 
     // вместо настоящего техосмотра подставляем лямбду, ServiceCenter — интерфейс с одним методом
-    private final Park park = new Park(vehicle -> true);
+    private final Park park = new Park(vehicle -> true, new SimplicityBeginnerPolicy());
 
     @Test
     void vehicleIsAddedIfInspectionPassed() {
@@ -27,7 +27,7 @@ class ParkTest {
 
     @Test
     void vehicleIsNotAddedIfInspectionFailed() {
-        Park strictPark = new Park(vehicle -> false);
+        Park strictPark = new Park(vehicle -> false, new SimplicityBeginnerPolicy());
 
         assertFalse(strictPark.addVehicle(new Bicycle(1, "Stels", 9, 0)));
         assertTrue(strictPark.getVehicles().isEmpty());
@@ -62,6 +62,19 @@ class ParkTest {
 
         assertEquals(1, result.size());
         assertEquals("Легкий", result.get(0).getName());
+    }
+
+    @Test
+    void beginnerRuleCanBeReplaced() {
+        // например, новое правило: новичкам только велосипеды
+        Park bikesOnlyPark = new Park(vehicle -> true, vehicle -> vehicle instanceof Bicycle);
+        bikesOnlyPark.addVehicle(new Bicycle(1, "Stels", 9, 0));
+        bikesOnlyPark.addVehicle(new ElectricScooter(2, "Ninebot", 9, 0, 0.5));
+
+        List<Vehicle> result = bikesOnlyPark.getBeginnerVehicles();
+
+        assertEquals(1, result.size());
+        assertEquals("Stels", result.get(0).getName());
     }
 
     @Test

@@ -13,12 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.hse.vyshkat.service.Park;
 import ru.hse.vyshkat.service.SimpleServiceCenter;
+import ru.hse.vyshkat.service.SimplicityBeginnerPolicy;
 
 class ConsoleAppTest {
 
     private final PrintStream originalOut = System.out;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private final Park park = new Park(new SimpleServiceCenter());
+    private final Park park = new Park(new SimpleServiceCenter(), new SimplicityBeginnerPolicy());
 
     @BeforeEach
     void setUp() {

@@ -13,15 +13,15 @@ import ru.hse.vyshkat.domain.Vehicle;
 
 public class Park {
 
-    public static final int MIN_BEGINNER_SIMPLICITY = 6;
-
     private final ServiceCenter serviceCenter;
+    private final BeginnerPolicy beginnerPolicy;
     private final List<Vehicle> vehicles = new ArrayList<>();
     private final List<Equipment> equipment = new ArrayList<>();
 
     @Inject
-    public Park(ServiceCenter serviceCenter) {
+    public Park(ServiceCenter serviceCenter, BeginnerPolicy beginnerPolicy) {
         this.serviceCenter = serviceCenter;
+        this.beginnerPolicy = beginnerPolicy;
     }
 
     // транспорт добавляется только через техосмотр, другого способа нет
@@ -85,7 +85,7 @@ public class Park {
     public List<Vehicle> getBeginnerVehicles() {
         List<Vehicle> result = new ArrayList<>();
         for (Vehicle vehicle : vehicles) {
-            if (vehicle.getSimplicity() >= MIN_BEGINNER_SIMPLICITY) {
+            if (beginnerPolicy.isForBeginner(vehicle)) {
                 result.add(vehicle);
             }
         }
